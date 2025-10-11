@@ -1,0 +1,8 @@
+id: "job-02"
+name: "Trabajo numero 2"
+priority: 4
+cpuCores: 8
+memMb: 4042
+durationMs: 15000
+state: "NEW"
+arrivalTime: 0

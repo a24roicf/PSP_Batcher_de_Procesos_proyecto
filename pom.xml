@@ -10,4 +10,11 @@
         <maven.compiler.release>17</maven.compiler.release>
         <exec.mainClass>sharko.psp_batcher_de_procesos_proyecto.PSP_Batcher_de_Procesos_proyecto</exec.mainClass>
     </properties>
+    <dependencies>
+        <dependency>
+        <groupId>org.yaml</groupId>
+        <artifactId>snakeyaml</artifactId>
+        <version>2.3</version>
+        </dependency>
+    </dependencies>
 </project>
