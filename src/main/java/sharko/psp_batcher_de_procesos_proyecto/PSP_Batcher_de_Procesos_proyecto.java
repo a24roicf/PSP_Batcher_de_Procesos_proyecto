@@ -12,9 +12,9 @@ public class PSP_Batcher_de_Procesos_proyecto {
 
     public static void main(String[] args) {
         
-        String rutaCarpeta = "jobs/";
+        String rutaCarpeta = "jobs/";               //Ruta de los archivos yaml
         
-        List<Job> jobs = new ArrayList<>();
+        List<Job> jobs = new ArrayList<>();         //Lista para tener todos los archivos guardados
         File carpeta = new File(rutaCarpeta);
         
     }
