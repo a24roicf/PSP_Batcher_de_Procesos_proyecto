@@ -22,13 +22,13 @@ public class Job {
         NEW, READY, WAITING, RUNNING, DONE, FAILED // Posibles estados del job
     }
 
-    // 👇 Constructor vacío (requerido por SnakeYAML)
+    //Constructor vacío
     public Job() {
         this.state = State.NEW;
-        this.arrivalTime = Instant.now().toEpochMilli();
+        this.arrivalTime = Instant.now().toEpochMilli(); //establece la propiedad arrivalTime con la marca de tiempo en milisegundos del instante exacto en que se ejecuta el código
     }
 
-    // 👇 Constructor completo (opcional, para uso manual)
+    //Constructor completo
     public Job(String id, String name, int priority, int cpuCores, int memMb, long durationMs) {
         this.id = id;
         this.name = name;
@@ -40,7 +40,7 @@ public class Job {
         this.arrivalTime = Instant.now().toEpochMilli();
     }
 
-    // --- Getters y Setters (importantes para SnakeYAML) ---
+    //Getters y Setters
     public String getId() {
         return id;
     }
@@ -111,7 +111,7 @@ public class Job {
         this.endTime = endTime;
     }
 
-    // --- Representación en texto ---
+    //Representación en texto
     @Override
     public String toString() {
         return "Job{" +

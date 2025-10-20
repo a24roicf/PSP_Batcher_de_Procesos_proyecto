@@ -30,7 +30,7 @@ public class PSP_Batcher_de_Procesos_proyecto {
                 Yaml yaml = new Yaml();
                 Job job = yaml.loadAs(input, Job.class);                //SnakeYAML para convertir el YAML en un objeto Job
 
-                if (job != null) {                                      //Condiciion para añadir los yaml como objetos
+                if (job != null) {                                      //Condicion para añadir los yaml como objetos
                     jobs.add(job);
                     System.out.println("Cargado job: " + job.getId() + " [" + job.getName() + "]");
                 }
