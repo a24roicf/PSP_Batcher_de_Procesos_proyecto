@@ -27,18 +27,18 @@ public class ResourceManager {
     public void allocate(Job job) {
         availableCpuCores -= job.getCpuCores();
         availableMemMb -= job.getMemMb();
-        System.out.println("Recursos asignados a"+ job.getName()+" → CPU: "+job.getCpuCores()+", MEM: "+job.getMemMb());
+        System.out.println("Recursos asignados a "+ job.getName()+" -> CPU: "+job.getCpuCores()+", MEM: "+job.getMemMb());
     }
 
     //Libera recursos cuando un job termina o falla
     public void release(Job job) {
         availableCpuCores += job.getCpuCores();
         availableMemMb += job.getMemMb();
-        System.out.println("Recursos liberados por "+job.getName()+" → CPU: "+job.getCpuCores()+", MEM: "+job.getMemMb()+"MB");
+        System.out.println("Recursos liberados por "+job.getName()+" -> CPU: "+job.getCpuCores()+", MEM: "+job.getMemMb()+"MB");
     }
 
     //Imprimir estado en consola
     public void printStatus() {
-        System.out.println("Recursos disponibles → CPU: "+availableCpuCores+"/"+totalCpuCores+", MEM: "+availableMemMb+"/"+totalMemMb+ "MB");
+        System.out.println("Recursos disponibles-> CPU: "+availableCpuCores+"/"+totalCpuCores+", MEM: "+availableMemMb+"/"+totalMemMb+ "MB");
     }
 }
