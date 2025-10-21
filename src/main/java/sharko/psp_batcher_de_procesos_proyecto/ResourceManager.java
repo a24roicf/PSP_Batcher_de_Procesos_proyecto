@@ -20,29 +20,25 @@ public class ResourceManager {
     
     //Booleano de si puede iniciar el job o no
     public boolean canRun(Job job) {
-        return job.getCpuCores() <= availableCpuCores &&
-               job.getMemMb() <= availableMemMb;
+        return job.getCpuCores() <= availableCpuCores && job.getMemMb() <= availableMemMb;
     }
 
     //Reserva recursos cuando un job inicia
     public void allocate(Job job) {
         availableCpuCores -= job.getCpuCores();
         availableMemMb -= job.getMemMb();
-        System.out.printf("Recursos asignados a %s → CPU: %d, MEM: %dMB%n",
-                job.getName(), job.getCpuCores(), job.getMemMb());
+        System.out.println("Recursos asignados a"+ job.getName()+" → CPU: "+job.getCpuCores()+", MEM: "+job.getMemMb());
     }
 
     //Libera recursos cuando un job termina o falla
     public void release(Job job) {
         availableCpuCores += job.getCpuCores();
         availableMemMb += job.getMemMb();
-        System.out.printf("Recursos liberados por %s → CPU: %d, MEM: %dMB%n",
-                job.getName(), job.getCpuCores(), job.getMemMb());
+        System.out.println("Recursos liberados por "+job.getName()+" → CPU: "+job.getCpuCores()+", MEM: "+job.getMemMb()+"MB");
     }
 
-    //Estado
+    //Imprimir estado en consola
     public void printStatus() {
-        System.out.printf("Recursos disponibles → CPU: %d/%d, MEM: %d/%d MB%n",
-                availableCpuCores, totalCpuCores, availableMemMb, totalMemMb);
+        System.out.println("Recursos disponibles → CPU: "+availableCpuCores+"/"+totalCpuCores+", MEM: "+availableMemMb+"/"+totalMemMb+ "MB");
     }
 }
