@@ -1,6 +1,11 @@
 package sharko.psp_batcher_de_procesos_proyecto;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import org.yaml.snakeyaml.Yaml;
 
@@ -10,7 +15,25 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class JobReciever {
     //Leer fichero
-    
+    public List<Job> reciveJobs(Path dir){
+        List<Job> jobs = new ArrayList<>();
+        String rutaCarpeta = "jobs/";
+        File carpeta = new File(rutaCarpeta);                                           //Archivo dentro de la carpeta
+        
+        if (!carpeta.exists() || !carpeta.isDirectory()) {                              //Condicion para saber si la ruta existe y es directorio
+            System.err.println("Carpeta no encontrada: " + rutaCarpeta);
+            return jobs;
+        }
+        for (File file : carpeta.listFiles((d, name) -> name.endsWith(".yaml"))) {
+            try (InputStream input = new FileInputStream(file)) {
+                Job job = processYaml(input);
+                System.out.println("Job valido: " + job.getId() + " (" + file.getName() + ")");
+            } catch (Exception e) {
+                System.err.println("Error al procesar " + file.getName() + ": " + e.getMessage());
+            }
+        }
+        return jobs;
+    }
     //Leer desde URL
     
     //Validad campos
@@ -66,13 +89,15 @@ public class JobReciever {
         }else{
             throw new Exception("El campo durationMs no esta correcto");
         }
+        //MODIFICAR DAOD QUE SALE NULO
+        //Job job = new Job(id,name,priority,cpuCores, memMb, durationMs);
+
         return null;
     }
     //Procesar YAML
-    public Job processYaml(InputStream input) throws Exception{
+    public Job processYaml(InputStream input) throws Exception {
         Yaml yaml = new Yaml();
         Map<String, Object> data = yaml.load(input);
-        Job job = validateJobs(data);
-        return job;
+        return validateJobs(data);
     }
 }
