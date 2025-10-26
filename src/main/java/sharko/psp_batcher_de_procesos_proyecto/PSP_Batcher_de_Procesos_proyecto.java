@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -15,10 +17,11 @@ public class PSP_Batcher_de_Procesos_proyecto {
 
     public static void main(String[] args) {
         
-        String rutaCarpeta = "jobs/";               //Ruta de los archivos yaml
-        
-        List<Job> jobs = new ArrayList<>();         //Lista para tener todos los archivos guardados
-        File carpeta = new File(rutaCarpeta);       //Archivo dentro de la carpeta
+        String rutaCarpeta = "jobs/";                   //Ruta de los archivos yaml
+        Queue<Job> jobsWaiting = new LinkedList<>();      //Cola de listas de trabajos esperando recursos
+        //Map<Job,proceso> jobsRunning = new HashMap<>(); //Lista de trabajos en ejecucion asociado cada uno con el proceso correspondiente
+        List<Job> jobs = new ArrayList<>();             //Lista para tener todos los archivos guardados
+        File carpeta = new File(rutaCarpeta);           //Archivo dentro de la carpeta
         
         if (!carpeta.exists() || !carpeta.isDirectory()) {                  //Condicion para saber si la ruta existe y es directorio
             System.err.println("Carpeta no encontrada: " + rutaCarpeta);
