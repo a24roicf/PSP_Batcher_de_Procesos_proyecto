@@ -15,8 +15,8 @@ public class Job {
     private long durationMs;    // Duración en milisegundos
     private State state;        // Estado del job
     private long arrivalTime;   // Tiempo de llegada
-    private Long startTime;     // Inicio
-    private Long endTime;       // Final
+    private long startTime;     // Inicio
+    private long endTime;       // Final
 
     public enum State {
         NEW, READY, WAITING, RUNNING, DONE, FAILED // Posibles estados del job

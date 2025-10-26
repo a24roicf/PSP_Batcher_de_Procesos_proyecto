@@ -27,16 +27,19 @@ public class PSP_Batcher_de_Procesos_proyecto {
             System.err.println("Carpeta no encontrada: " + rutaCarpeta);
         }
         
+        JobReciever jr = new JobReciever();
+        
+        
         //Bucle para recorrer todos los archivos.yaml
         for (File file : carpeta.listFiles((dir, name) -> name.endsWith(".yaml"))) {
             try (InputStream input = new FileInputStream(file)) {
                 Yaml yaml = new Yaml();
-                Job job = yaml.loadAs(input, Job.class);                //SnakeYAML para convertir el YAML en un objeto Job
-
-                if (job != null) {                                      //Condicion para añadir los yaml como objetos
+                //Job job = yaml.loadAs(input, Job.class);                //SnakeYAML para convertir el YAML en un objeto Job
+                jr.processYaml(input);
+                /*if (job != null) {                                      //Condicion para añadir los yaml como objetos
                     jobs.add(job);
                     System.out.println("Cargado job: " + job.getId() + " [" + job.getName() + "]");
-                }
+                }*/
             } catch (Exception e) {
                 System.err.println("Error al leer " + file.getName() + ": " + e.getMessage());
             }
