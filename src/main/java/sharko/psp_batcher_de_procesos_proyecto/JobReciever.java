@@ -38,19 +38,26 @@ public class JobReciever {
     
     //Validad campos
     public Job validateJobs(Map<String, Object> data) throws Exception{
+        String id;
+        String name;
+        int priority;
+        int cpuCores;
+        int memMb;
+        long durationMs;
+        
         //data.forEach((k, v) -> System.out.println(k + ": " + v)); Comprobar lo que lee en consola
         if (data.containsKey("id") && data.get("id") instanceof String && data.get("id") != null) {
-            
+            id = (String) data.get("id");
         }else{
             throw new Exception("El campo ID no esta correcto");
         }
         if (data.containsKey("name") && data.get("name") instanceof String && data.get("name") != null) {
-                
+            name = (String) data.get("name");
         }else{
             throw new Exception("El campo Name no esta correcto");
         }
         if (data.containsKey("priority") && data.get("priority") instanceof Integer && data.get("priority") != null) {
-            int priority = (Integer) data.get("priority");
+            priority = (Integer) data.get("priority");
             if (priority >= 0 && priority <= 4) {
                 
             }else{
@@ -60,7 +67,7 @@ public class JobReciever {
             throw new Exception("El campo Priority no esta correcto");
         }
         if (data.containsKey("cpuCores") && data.get("cpuCores") instanceof Integer && data.get("cpuCores") != null) {
-            int cpuCores = (Integer) data.get("cpuCores");
+            cpuCores = (Integer) data.get("cpuCores");
             if (cpuCores >= 1){
                 
             }else{
@@ -70,7 +77,7 @@ public class JobReciever {
             throw new Exception("El campo cpuCores no esta correcto");
         }
         if (data.containsKey("memMb") && data.get("memMb") instanceof Integer && data.get("memMb") != null) {
-            int memMb = (Integer) data.get("memMb");
+            memMb = (Integer) data.get("memMb");
             if (memMb >= 0) {
                 
             }else{
@@ -80,7 +87,7 @@ public class JobReciever {
             throw new Exception("El campo memMb no esta correcto");
         }
         if(data.containsKey("durationMs") && data.get("durationMs") instanceof Integer && data.get("durationMs") != null){
-            int durationMs = (Integer) data.get("durationMs");
+            durationMs = (Integer) data.get("durationMs");
             if (durationMs >= 0) {
                 
             }else{
@@ -90,9 +97,9 @@ public class JobReciever {
             throw new Exception("El campo durationMs no esta correcto");
         }
         //MODIFICAR DAOD QUE SALE NULO
-        //Job job = new Job(id,name,priority,cpuCores, memMb, durationMs);
+        Job job = new Job(id, name, priority, cpuCores, memMb, durationMs);
 
-        return null;
+        return job;
     }
     //Procesar YAML
     public Job processYaml(InputStream input) throws Exception {
