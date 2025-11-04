@@ -28,19 +28,19 @@ public class PSP_Batcher_de_Procesos_proyecto {
         
         // Mostrar resumen de los jobs cargados
         System.out.println("Total de jobs cargados: " + jobs.size());
-        for (Job job : jobs) {
+        for (Job job : jobs) {                              //Bucle para recorrer los jobs
             System.out.println(job);
         }
         
         //Prueba de Jobs con el ResourceManager
-        ResourceManager resources = new ResourceManager(8, 16000);
-        for (Job job : jobs) {
-            if (resources.canRun(job)) {
-                job.setState(Job.State.READY);
-                readyQueue.add(job);
+        ResourceManager resources = new ResourceManager(8, 16000);              //Simulacion de un sistema de 8 nucleos y 16GB de RAM
+        for (Job job : jobs) {                                                  //Bucle para recorrer jobs
+            if (resources.canRun(job)) {                                        //Comprobar si hay recursos para ejecutar los jobs
+                job.setState(Job.State.READY);                                  //Si hay recursos el estado pasa a READY
+                readyQueue.add(job);                                            //Añadir a la cola de ready
             } else {
-                job.setState(Job.State.WAITING);
-                waitingQueue.add(job);
+                job.setState(Job.State.WAITING);                                //Si no hay recursos pasa a waiting
+                waitingQueue.add(job);                                          //añadir a la cola de waiting
             }
         }
         
@@ -55,38 +55,38 @@ public class PSP_Batcher_de_Procesos_proyecto {
         String politica = (opcion == 2) ? "RR" : "FCFS";
         int quantum = 200; // en milisegundos (solo para RR) Cada Job "ocupa" la CPU solo ese intervalo y luego cede el turno.
 
-        System.out.println("\nPlanificador seleccionado: " + (politica.equals("FCFS") ? "First Come First Served" : "Round Robin (" + quantum + " ms)"));
+        System.out.println("Planificador seleccionado: " + (politica.equals("FCFS") ? "First Come First Served" : "Round Robin (" + quantum + " ms)"));
     
-        while (!readyQueue.isEmpty()) {
+        while (!readyQueue.isEmpty()) {                                         //Bucle mientras haya trabajos para ejecutar
             if (politica.equals("FCFS")) {
-                Job job = readyQueue.poll();
-                if (resources.canRun(job)) {
-                    resources.allocate(job);
-                    job.setState(Job.State.RUNNING);
-                    job.setStartTime(System.currentTimeMillis());
-                    runningJobs.add(job);
-                    System.out.println("→ Ejecutando (FCFS): " + job.getName());
+                Job job = readyQueue.poll();                                    //Extrae el primer job de la cola
+                if (resources.canRun(job)) {                                    //Comprueba si hay recursos disponibles
+                    resources.allocate(job);                                    //Reserva los recursos necesarios
+                    job.setState(Job.State.RUNNING);                            //Cambia el estado del job a running
+                    job.setStartTime(System.currentTimeMillis());               //Registra el tiempo de inicio
+                    runningJobs.add(job);                                       //Añade el job a la lista ejecutandose
+                    System.out.println("Ejecutando (FCFS): " + job.getName());  //Mostrar en consola el job que esta activo
                 } else {
-                    job.setState(Job.State.WAITING);
-                    waitingQueue.add(job);
+                    job.setState(Job.State.WAITING);                            //Sin recursos pasa a waiting
+                    waitingQueue.add(job);                                      //Añadir el job a la cola de espera
                 }
-            } else {
-                Job job = readyQueue.poll();
-                if (resources.canRun(job)) {
-                    resources.allocate(job);
-                    job.setState(Job.State.RUNNING);
-                    job.setStartTime(System.currentTimeMillis());
-                    runningJobs.add(job);
-                    System.out.println("→ Ejecutando (RR): " + job.getName() + " por " + quantum + " ms");
+            } else {                                                            //Si eliges el metodo Round Robin
+                Job job = readyQueue.poll();                                    //Extrae el primer job de la cola
+                if (resources.canRun(job)) {                                    //Comprueba si hay recursos dispo
+                    resources.allocate(job);                                    //Reserva los recursos necesarios
+                    job.setState(Job.State.RUNNING);                            //Cambia el estado del job a running
+                    job.setStartTime(System.currentTimeMillis());               //Registra el tiempo de inicio
+                    runningJobs.add(job);                                       //Añade el job a la lista ejecutandose
+                    System.out.println("Ejecutando (RR): " + job.getName() + " por " + quantum + " ms");
 
                     // Simulación del consumo de quantum sin ejecutar por ahora
-                    job.setState(Job.State.READY);
-                    readyQueue.add(job);                                        // Vuelve al final de la cola (cola circular)
-                    resources.release(job);
-                    runningJobs.remove(job);
+                    job.setState(Job.State.READY);                              //Vuelve a esta listo tras su turno
+                    readyQueue.add(job);                                        //Vuelve al final de la cola (cola circular)
+                    resources.release(job);                                     //Libera los recursos usados por el job
+                    runningJobs.remove(job);                                    //Se quita de la lista running
                 } else {
-                    job.setState(Job.State.WAITING);
-                    waitingQueue.add(job);
+                    job.setState(Job.State.WAITING);                            //Si no hay recursos pasa a waiting
+                    waitingQueue.add(job);                                      //Se añade a la cola de espera
                 }
             }
             resources.printStatus();                                            //Imprime los recursos disponibles
