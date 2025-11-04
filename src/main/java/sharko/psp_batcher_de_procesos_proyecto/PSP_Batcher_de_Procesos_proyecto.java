@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Scanner;
 
 /**
  *
@@ -16,9 +17,10 @@ public class PSP_Batcher_de_Procesos_proyecto {
     public static void main(String[] args) {
         
         String rutaCarpeta = "jobs/";                       //Ruta de los archivos yaml
-        Queue<Job> jobsWaiting = new LinkedList<>();        //Cola de listas de trabajos esperando recursos
-        //Map<Job,proceso> jobsRunning = new HashMap<>();   //Lista de trabajos en ejecucion asociado cada uno con el proceso correspondiente
-        List<Job> jobs = new ArrayList<>();                 //Lista para tener todos los archivos guardados
+        List<Job> jobs = new ArrayList<>();                 //Lista de trabajos
+        Queue<Job> readyQueue = new LinkedList<>();         //Lista de cola preparado
+        Queue<Job> waitingQueue = new LinkedList<>();       //Lista de cola en espera
+        List<Job> runningJobs = new ArrayList<>();          //Lista de cola en proceso
         File carpeta = new File(rutaCarpeta);               //Archivo dentro de la carpeta
         
         JobReciever jr = new JobReciever();
@@ -34,14 +36,25 @@ public class PSP_Batcher_de_Procesos_proyecto {
         ResourceManager resources = new ResourceManager(8, 16000);
         for (Job job : jobs) {
             if (resources.canRun(job)) {
-                resources.allocate(job);
-                job.setState(Job.State.RUNNING);
-                System.out.println("Ejecutando job: " + job.getName());
+                job.setState(Job.State.READY);
+                readyQueue.add(job);
             } else {
                 job.setState(Job.State.WAITING);
-                System.out.println("En espera: " + job.getName());
+                waitingQueue.add(job);
             }
-            resources.printStatus();
         }
+        
+        //Menu interactivo consola
+        Scanner sc = new Scanner(System.in);
+        System.out.println("\n=== Seleccione política de planificación ===");
+        System.out.println("1. FCFS (First Come, First Served)");
+        System.out.println("2. Round Robin");
+        System.out.print("Opción: ");
+        int opcion = sc.nextInt();
+
+        String politica = (opcion == 2) ? "RR" : "FCFS";
+        int quantum = 200; // en milisegundos (solo para RR)
+
+        System.out.println("\nPlanificador seleccionado: " + (politica.equals("FCFS") ? "First Come First Served" : "Round Robin (" + quantum + " ms)"));
     }
 }
