@@ -46,7 +46,7 @@ public class PSP_Batcher_de_Procesos_proyecto {
         
         //Menu interactivo consola
         Scanner sc = new Scanner(System.in);
-        System.out.println("Selecciona una política de planificación");
+        System.out.println("Selecciona una politica de planificacion");
         System.out.println("1. FCFS (First Come, First Served)");
         System.out.println("2. Round Robin");
         System.out.print("Opcion: ");
@@ -66,6 +66,18 @@ public class PSP_Batcher_de_Procesos_proyecto {
                     job.setStartTime(System.currentTimeMillis());               //Registra el tiempo de inicio
                     runningJobs.add(job);                                       //Añade el job a la lista ejecutandose
                     System.out.println("Ejecutando (FCFS): " + job.getName());  //Mostrar en consola el job que esta activo
+                    job.setState(Job.State.DONE);
+                    resources.release(job);
+                    while (!waitingQueue.isEmpty()) {
+                        Job w = waitingQueue.peek();
+                        if (resources.canRun(w)) {
+                            waitingQueue.poll();
+                            w.setState(Job.State.READY);
+                            readyQueue.add(w);
+                        } else {
+                            break;
+                        }
+                    }
                 } else {
                     job.setState(Job.State.WAITING);                            //Sin recursos pasa a waiting
                     waitingQueue.add(job);                                      //Añadir el job a la cola de espera
@@ -77,13 +89,22 @@ public class PSP_Batcher_de_Procesos_proyecto {
                     job.setState(Job.State.RUNNING);                            //Cambia el estado del job a running
                     job.setStartTime(System.currentTimeMillis());               //Registra el tiempo de inicio
                     runningJobs.add(job);                                       //Añade el job a la lista ejecutandose
+                    long ejecucion = Math.min(quantum, job.getRemainingTime()); //Valor para tiempo de ejecucion
                     System.out.println("Ejecutando (RR): " + job.getName() + " por " + quantum + " ms");
 
                     // Simulación del consumo de quantum sin ejecutar por ahora
-                    job.setState(Job.State.READY);                              //Vuelve a esta listo tras su turno
-                    readyQueue.add(job);                                        //Vuelve al final de la cola (cola circular)
+                    job.setRemainingTime(job.getRemainingTime() - ejecucion);
                     resources.release(job);                                     //Libera los recursos usados por el job
                     runningJobs.remove(job);                                    //Se quita de la lista running
+                    
+                    if (job.getRemainingTime() > 0) {
+                        job.setState(Job.State.READY);                              //Vuelve a esta listo tras su turno
+                        readyQueue.add(job);                                        //Vuelve al final de la cola (cola circular)
+                    } else {
+                        job.setState(Job.State.DONE);                           //Pasa a ser un job finalizado
+                        job.setEndTime(System.currentTimeMillis());             //Guarda el tiempo cuando finalizo el job
+                        System.out.println(job.getName()+" finalizado.");
+                    }
                 } else {
                     job.setState(Job.State.WAITING);                            //Si no hay recursos pasa a waiting
                     waitingQueue.add(job);                                      //Se añade a la cola de espera
@@ -94,7 +115,7 @@ public class PSP_Batcher_de_Procesos_proyecto {
 
         System.out.println("Todos los jobs procesados");                        //Vista desde consola para saber el estado de los jobs
         for (Job job : jobs) {
-            System.out.println(job.getName() + "Estado final: " + job.getState());
+            System.out.println(job.getName() + " Estado final: " + job.getState());
         }
         sc.close();                                                             //Cerrar escaner
     }

@@ -27,6 +27,7 @@ public class JobReciever {
         for (File file : carpeta.listFiles((d, name) -> name.endsWith(".yaml"))) {
             try (InputStream input = new FileInputStream(file)) {
                 Job job = processYaml(input);
+                jobs.add(job);
                 System.out.println("Job valido: " + job.getId() + " (" + file.getName() + ")");
             } catch (Exception e) {
                 System.err.println("Error al procesar " + file.getName() + ": " + e.getMessage());

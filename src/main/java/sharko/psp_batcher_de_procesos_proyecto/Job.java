@@ -13,6 +13,7 @@ public class Job {
     private int cpuCores;       // Núcleos solicitados
     private int memMb;          // Memoria solicitada en MB
     private long durationMs;    // Duración en milisegundos
+    private long remainingTime; // Tiempo restante para Round Robin
     private State state;        // Estado del job
     private long arrivalTime;   // Tiempo de llegada
     private long startTime;     // Inicio
@@ -36,6 +37,7 @@ public class Job {
         this.cpuCores = cpuCores;
         this.memMb = memMb;
         this.durationMs = durationMs;
+        this.remainingTime = durationMs;
         this.state = State.NEW;
         this.arrivalTime = Instant.now().toEpochMilli();
     }
@@ -81,8 +83,17 @@ public class Job {
     }
     public void setDurationMs(long durationMs) {
         this.durationMs = durationMs;
+        this.remainingTime = durationMs;
     }
 
+    public long getRemainingTime(){
+        return remainingTime;
+    }
+    
+    public void setRemainingTime(long remainingTime){
+        this.remainingTime = remainingTime;
+    }
+    
     public State getState() {
         return state;
     }
