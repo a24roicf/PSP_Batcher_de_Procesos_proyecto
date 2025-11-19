@@ -54,8 +54,6 @@ public class PSP_Batcher_de_Procesos_proyecto {
 
         String politica = (opcion == 2) ? "RR" : "FCFS";
         int quantum = 200; // en milisegundos (solo para RR) Cada Job "ocupa" la CPU solo ese intervalo y luego cede el turno.
-
-        System.out.println("Planificador seleccionado: " + (politica.equals("FCFS") ? "First Come First Served" : "Round Robin (" + quantum + " ms)"));
     
         while (!readyQueue.isEmpty()) {                                         //Bucle mientras haya trabajos para ejecutar
             if (politica.equals("FCFS")) {
@@ -66,16 +64,16 @@ public class PSP_Batcher_de_Procesos_proyecto {
                     job.setStartTime(System.currentTimeMillis());               //Registra el tiempo de inicio
                     runningJobs.add(job);                                       //Añade el job a la lista ejecutandose
                     System.out.println("Ejecutando (FCFS): " + job.getName());  //Mostrar en consola el job que esta activo
-                    job.setState(Job.State.DONE);
-                    resources.release(job);
-                    while (!waitingQueue.isEmpty()) {
-                        Job w = waitingQueue.peek();
-                        if (resources.canRun(w)) {
-                            waitingQueue.poll();
-                            w.setState(Job.State.READY);
-                            readyQueue.add(w);
+                    job.setState(Job.State.DONE);                               //Cambiarle el estado del job a DONE
+                    resources.release(job);                                     //Libera recursos del job
+                    while (!waitingQueue.isEmpty()) {                           //Bucle de trabajos esperandos al no tener recursos
+                        Job w = waitingQueue.peek();                            //Va al primer Job de la cola de espera
+                        if (resources.canRun(w)) {                              //Comprueba si hay recursos disponibles para ejecutar
+                            waitingQueue.poll();                                //Si lo hay se quita de la cola de WAITING
+                            w.setState(Job.State.READY);                        //Cambia el estado del job a READY
+                            readyQueue.add(w);                                  //Lo agregamos a la cola correspondiente
                         } else {
-                            break;
+                            break;                                              //Si no hay recursos se sale del bucle
                         }
                     }
                 } else {
